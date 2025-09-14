@@ -1,0 +1,2 @@
+2025-09-12 00:16:13 AUDIT - REGISTRATION | Email: kia.doe1@example.com | Time: 2025-09-12T00:16:13.475822600 | IP: 0:0:0:0:0:0:0:1 | UserAgent: PostmanRuntime/7.44.0
+2025-09-12 00:16:13 AUDIT - DATA_CHANGE | Entity: User | Action: CREATE | User: kia.doe1@example.com | Time: 2025-09-12T00:16:13.482005300 | IP: 0:0:0:0:0:0:0:1 | UserAgent: PostmanRuntime/7.44.0

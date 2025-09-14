@@ -1,0 +1,4 @@
+2025-09-13 22:36:03 AUDIT - REGISTRATION | Email: kiana.d@example.com | Time: 2025-09-13T22:36:03.727912 | IP: 0:0:0:0:0:0:0:1 | UserAgent: PostmanRuntime/7.46.0
+2025-09-13 22:36:03 AUDIT - DATA_CHANGE | Entity: User | Action: CREATE | User: kiana.d@example.com | Time: 2025-09-13T22:36:03.732239 | IP: 0:0:0:0:0:0:0:1 | UserAgent: PostmanRuntime/7.46.0
+2025-09-13 23:23:32 AUDIT - LOGIN_FAILED | User: user@test.com | Reason: BadCredentialsException | Time: 2025-09-13T23:23:32.685144 | IP: 0:0:0:0:0:0:0:1 | UserAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb
+2025-09-13 23:25:06 AUDIT - LOGIN_SUCCESS | User: user@test.com | Time: 2025-09-13T23:25:06.192316700 | IP: 0:0:0:0:0:0:0:1 | UserAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb

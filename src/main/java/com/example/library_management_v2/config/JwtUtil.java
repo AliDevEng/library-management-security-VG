@@ -30,7 +30,11 @@ public class JwtUtil {
 
     // Token giltighets-tid: 24 timmar i millisekunder
     // Efter denna tid måste användaren logga in igen
-    private final long JWT_EXPIRATION = 1000 * 60 * 60 * 24; // 24 timmar
+    // private final long JWT_EXPIRATION = 1000 * 60 * 60 * 24; // 24 timmar
+
+    // Token giltighets-tid: 15 minuter i millisekunder
+    // Kort livslängd eftersom vi nu har refresh tokens för förnyelse
+    private final long JWT_EXPIRATION = 1000 * 60 * 15; // 15 minuter
 
 
     public String extractUsername(String token) {
@@ -50,6 +54,7 @@ public class JwtUtil {
     }
 
 
+    // Generell metod för att extrahera specifik information från token
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

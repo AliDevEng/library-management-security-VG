@@ -21,7 +21,7 @@ public class RefreshToken {
     private String token;
 
     @Column(name = "expiry_date", nullable = false)
-    private LocalDateTime expiryDate;
+    private String expiryDate;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
@@ -31,7 +31,7 @@ public class RefreshToken {
     public RefreshToken() {}
 
     // Konstruktor med parametrar
-    public RefreshToken(String token, LocalDateTime expiryDate, User user) {
+    public RefreshToken(String token, String expiryDate, User user) {
         this.token = token;
         this.expiryDate = expiryDate;
         this.user = user;
@@ -54,11 +54,11 @@ public class RefreshToken {
         this.token = token;
     }
 
-    public LocalDateTime getExpiryDate() {
+    public String getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(LocalDateTime expiryDate) {
+    public void setExpiryDate(String expiryDate) {
         this.expiryDate = expiryDate;
     }
 
@@ -71,8 +71,30 @@ public class RefreshToken {
     }
 
     // Hjälpmetod för att kontrollera om token har gått ut
+    // Konverterar String tillbaka till LocalDateTime för jämförelse
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(this.expiryDate);
+        try {
+            LocalDateTime expiry = LocalDateTime.parse(this.expiryDate);
+            return LocalDateTime.now().isAfter(expiry);
+        } catch (Exception e) {
+            // Om parsing misslyckas, betrakta som utgånget för säkerhets skull
+            return true;
+        }
+    }
+
+    // Hjälpmetod för att sätta utgångsdatum från LocalDateTime
+    public void setExpiryDateFromLocalDateTime(LocalDateTime dateTime) {
+        this.expiryDate = dateTime.toString();
+    }
+
+    // Hjälpmetod för att få utgångsdatum som LocalDateTime
+    public LocalDateTime getExpiryDateAsLocalDateTime() {
+        try {
+            return LocalDateTime.parse(this.expiryDate);
+        } catch (Exception e) {
+            // Fallback till nuvarande tid om parsing misslyckas
+            return LocalDateTime.now();
+        }
     }
 
 

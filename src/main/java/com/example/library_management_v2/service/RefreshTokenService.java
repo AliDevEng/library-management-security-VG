@@ -44,7 +44,10 @@ public class RefreshTokenService {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
         refreshToken.setToken(UUID.randomUUID().toString()); // Generera unikt token
-        refreshToken.setExpiryDate(LocalDateTime.now().plusDays(REFRESH_TOKEN_DURATION_DAYS));
+
+        // Sätt utgångsdatum som String
+        LocalDateTime expiryDateTime = LocalDateTime.now().plusDays(REFRESH_TOKEN_DURATION_DAYS);
+        refreshToken.setExpiryDate(expiryDateTime.toString());
 
         return refreshTokenRepository.save(refreshToken);
     }
@@ -76,7 +79,8 @@ public class RefreshTokenService {
 
     // Rensa alla utgångna refresh tokens från databasen
     public void deleteExpiredTokens() {
-        refreshTokenRepository.deleteExpiredTokens(LocalDateTime.now());
+        String now = LocalDateTime.now().toString();
+        refreshTokenRepository.deleteExpiredTokens(now);
     }
 
 

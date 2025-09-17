@@ -17,6 +17,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import org.springframework.security.config.http.SessionCreationPolicy;
+
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -37,7 +41,10 @@ public class SecurityConfig {
     @Autowired
     private CustomLogoutSuccessHandler logoutSuccessHandler;
 
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    /**
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -74,6 +81,48 @@ public class SecurityConfig {
 
         // CSRF-skydd är aktiverat (inget .disable())
         ;
+
+        return http.build();
+    }
+    */
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                // CSRF-skydd kan inaktiveras för JWT eftersom vi inte använder cookies
+                .csrf(csrf -> csrf.disable())
+
+                // SESSION MANAGEMENT: DET VIKTIGA STEGET!
+                // Säg till Spring Security att INTE skapa eller använda sessions
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
+                // AUTHORIZATION RULES: Vilka endpoints kräver autentisering
+                .authorizeHttpRequests(authz -> authz
+
+                        // Publika endpoints (ingen autentisering krävs)
+                        .requestMatchers("/auth/**").permitAll()        // Inloggning & registrering
+                        .requestMatchers("/test").permitAll()           // Test-endpoint
+                        .requestMatchers("/test/**").permitAll()        // Alla test-endpoints
+
+                        // ADMIN-ONLY områden - endast ADMIN får komma åt
+                        .requestMatchers("/admin/**").hasRole("ADMIN")      // Admin-panelen
+                        .requestMatchers("/users/**").hasRole("ADMIN")      // Användarhantering
+                        .requestMatchers("/authors/**").hasRole("ADMIN")    // Författarhantering
+
+                        // USER och ADMIN områden - både USER och ADMIN får komma åt
+                        .requestMatchers("/books/**").hasAnyRole("USER", "ADMIN")    // Böcker
+                        .requestMatchers("/loans/**").hasAnyRole("USER", "ADMIN")    // Lån
+
+                        // Alla andra requests kräver autentisering
+                        .anyRequest().authenticated()
+                )
+
+
+                // LÄGG TILL VÅRT JWT-FILTER
+                // Detta filter körs FÖRE Spring Security's vanliga autentisering
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

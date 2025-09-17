@@ -1,13 +1,10 @@
 package com.example.library_management_v2.dto;
 
 
-// DTO som skickas tillbaka när inloggning lyckas
-// Innehåller JWT-token och användarinformation
-
 public class JwtResponse {
 
-
-    private String token;
+    private String accessToken;
+    private String refreshToken;
     private String type = "Bearer";  // Token-typ (standard för JWT)
     private String email;
     private String role;
@@ -15,12 +12,13 @@ public class JwtResponse {
     private String firstName;
     private String lastName;
 
-    // Tom konstruktör som krävs av SpringBoot
-    public JwtResponse() {
-    }
+    // Tom konstruktor
+    public JwtResponse() {}
 
-    public JwtResponse(String token, String email, String role, Long userId, String firstName, String lastName) {
-        this.token = token;
+    // Huvudkonstruktor med refresh token
+    public JwtResponse(String accessToken, String refreshToken, String email, String role, Long userId, String firstName, String lastName) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.email = email;
         this.role = role;
         this.userId = userId;
@@ -28,12 +26,40 @@ public class JwtResponse {
         this.lastName = lastName;
     }
 
+    // Bakåtkompatibel konstruktor (utan refresh token)
+    public JwtResponse(String accessToken, String email, String role, Long userId, String firstName, String lastName) {
+        this.accessToken = accessToken;
+        this.email = email;
+        this.role = role;
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    // Getters och setters
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    // Bakåtkompatibilitet
     public String getToken() {
-        return token;
+        return accessToken;
     }
 
     public void setToken(String token) {
-        this.token = token;
+        this.accessToken = token;
     }
 
     public String getType() {
